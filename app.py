@@ -296,34 +296,30 @@ def admin_id_login():
 # =========================
 # STUDENT LOGIN
 # =========================
-@app.route("/student/login", methods=["GET", "POST"])
+@app.route("/student/login", methods=["GET","POST"])
 def student_login():
+
     if request.method == "POST":
+
         roll_number = request.form.get("roll_number")
-        admin_id = request.form.get("admin_id")
-
-        if not admin_id:
-            return render_template("student_login.html", error="Please enter Admin ID.")
-
-        admin = Admin.query.filter_by(admin_id=admin_id).first()
-        if not admin:
-            return render_template("student_login.html", error="Invalid Admin ID.")
 
         student = Student.query.filter_by(
-            roll_number=roll_number,
-            owner_admin_id=admin.id
+            roll_number=roll_number
         ).first()
 
         if student:
+
             session.clear()
             session["student_id"] = student.id
-            session["student_owner_admin_id"] = admin.id
+
             return redirect("/student/dashboard")
 
-        return render_template("student_login.html", error="Student not found for this Admin ID.")
+        return render_template(
+            "student_login.html",
+            error="Student not found"
+        )
 
     return render_template("student_login.html", error=None)
-
 
 # =========================
 # ADMIN DASHBOARD
