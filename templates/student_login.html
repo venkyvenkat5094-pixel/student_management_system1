@@ -10,6 +10,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+margin:0;
 }
 
 .box{
@@ -27,6 +28,7 @@ padding:10px;
 margin:10px 0;
 border-radius:5px;
 border:1px solid #ccc;
+box-sizing:border-box;
 }
 
 button{
@@ -45,6 +47,14 @@ background:#0056b3;
 
 .error{
 color:red;
+margin-top:10px;
+}
+
+a{
+display:inline-block;
+margin-top:15px;
+text-decoration:none;
+color:#007bff;
 }
 </style>
 </head>
@@ -56,16 +66,15 @@ color:red;
 <h2>Student Login</h2>
 
 <form method="POST">
-
-<input type="text" name="roll_number" placeholder="Enter Roll Number" required>
-
-<button type="submit">Login</button>
-
+    <input type="text" name="roll_number" placeholder="Enter Roll Number" required>
+    <button type="submit">Login</button>
 </form>
 
 {% if error %}
-<p class="error">{{error}}</p>
+<p class="error">{{ error }}</p>
 {% endif %}
+
+<a href="/">Back to Home</a>
 
 </div>
 
