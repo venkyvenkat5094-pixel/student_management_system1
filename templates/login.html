@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Selector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2563eb">
+    <style>
+        body{margin:0;font-family:Arial;height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#0f172a,#2563eb);}
+        .box{width:380px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border-radius:18px;padding:28px;box-shadow:0 10px 25px rgba(0,0,0,0.25);color:white;}
+        h2{text-align:center;margin:0 0 10px 0;}
+        .subtitle{text-align:center;font-size:14px;opacity:0.9;margin-bottom:18px;}
+        .chat-area{background:#0b1428;border-radius:12px;padding:12px;min-height:120px;margin-bottom:16px;}
+        .bubble-ai{background:#1a233a;color:white;padding:10px 12px;border-radius:10px;margin-bottom:10px;display:inline-block;max-width:90%;}
+        .bubble-user{background:#2b60ff;color:white;padding:10px 12px;border-radius:10px;margin:8px 0 8px auto;display:block;width:fit-content;max-width:90%;}
+        .option-btn,.login-btn,.back-btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;font-size:15px;}
+        .option-btn,.back-btn{background:rgba(255,255,255,0.18);color:white;}
+        .option-btn:hover,.back-btn:hover{background:rgba(255,255,255,0.28);}
+        .login-btn{background:#111827;color:white;}
+        .login-btn:hover{background:#1f2937;}
+        input{width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;outline:none;box-sizing:border-box;}
+        .hidden{display:none;}
+        #installBtn{display:none;}
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Login Assistant</h2>
+    <div class="subtitle">Student Management System</div>
+
+    <div class="chat-area" id="chatArea">
+        <div class="bubble-ai">
+            Hello 👋<br>
+            Please tell me who you are:
+            <br><br>
+            1) Main Admin<br>
+            2) New Admin<br>
+            3) Student
+        </div>
+    </div>
+
+    <div id="roleButtons">
+        <button class="option-btn" onclick="chooseRole('main')">1) Main Admin</button>
+        <button class="option-btn" onclick="chooseRole('newadmin')">2) New Admin</button>
+        <button class="option-btn" onclick="chooseRole('student')">3) Student</button>
+    </div>
+
+    <div id="mainAdminForm" class="hidden">
+        <form method="POST" action="/">
+            <input type="text" name="username" placeholder="Main Admin Username" required>
+            <input type="password" name="password" placeholder="Main Admin Password" required>
+            <button type="submit" class="login-btn">Main Admin Login</button>
+        </form>
+    </div>
+
+    <div id="newAdminForm" class="hidden">
+        <form method="POST" action="/admin-id-login">
+            <input type="text" name="admin_id" placeholder="Enter Admin ID" required>
+            <button type="submit" class="login-btn">New Admin Login</button>
+        </form>
+    </div>
+
+    <div id="studentForm" class="hidden">
+        <form method="POST" action="/student/login">
+            <input type="text" name="admin_id" placeholder="Enter Admin ID" required>
+            <input type="text" name="roll_number" placeholder="Enter Roll Number" required>
+            <button type="submit" class="login-btn">Student Login</button>
+        </form>
+    </div>
+
+    <button id="installBtn" class="option-btn">Install App</button>
+    <button id="backBtn" class="back-btn hidden" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+function addUserBubble(text){
+    const chatArea = document.getElementById("chatArea");
+    const bubble = document.createElement("div");
+    bubble.className = "bubble-user";
+    bubble.innerText = text;
+    chatArea.appendChild(bubble);
+}
+
+function addAiBubble(text){
+    const chatArea = document.getElementById("chatArea");
+    const bubble = document.createElement("div");
+    bubble.className = "bubble-ai";
+    bubble.innerText = text;
+    chatArea.appendChild(bubble);
+}
+
+function hideAllForms(){
+    document.getElementById("mainAdminForm").classList.add("hidden");
+    document.getElementById("newAdminForm").classList.add("hidden");
+    document.getElementById("studentForm").classList.add("hidden");
+}
+
+function chooseRole(role){
+    const roleButtons = document.getElementById("roleButtons");
+    const backBtn = document.getElementById("backBtn");
+
+    hideAllForms();
+    roleButtons.classList.add("hidden");
+    backBtn.classList.remove("hidden");
+
+    if(role === "main"){
+        addUserBubble("I am Main Admin");
+        addAiBubble("Okay. Please enter your main admin username and password.");
+        document.getElementById("mainAdminForm").classList.remove("hidden");
+    }
+
+    if(role === "newadmin"){
+        addUserBubble("I am New Admin");
+        addAiBubble("Okay. Please enter the Admin ID given by the main admin.");
+        document.getElementById("newAdminForm").classList.remove("hidden");
+    }
+
+    if(role === "student"){
+        addUserBubble("I am Student");
+        addAiBubble("Okay. Please enter your Admin ID and Roll Number to login.");
+        document.getElementById("studentForm").classList.remove("hidden");
+    }
+}
+
+function goBack(){
+    const chatArea = document.getElementById("chatArea");
+    chatArea.innerHTML = `
+        <div class="bubble-ai">
+            Hello 👋<br>
+            Please tell me who you are:
+            <br><br>
+            1) Main Admin<br>
+            2) New Admin<br>
+            3) Student
+        </div>
+    `;
+
+    hideAllForms();
+    document.getElementById("roleButtons").classList.remove("hidden");
+    document.getElementById("backBtn").classList.add("hidden");
+}
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/static/sw.js");
+    });
+}
+
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-block";
+});
+
+installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+});
+</script>
+
+</body>
+</html>
