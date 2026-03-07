@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Admins</title>
+    <style>
+        body{font-family:Arial;background:#f4f6fb;padding:20px;}
+        .card{background:white;border-radius:10px;padding:20px;box-shadow:0 5px 20px rgba(0,0,0,0.12);}
+        table{width:100%;border-collapse:collapse;}
+        th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left;}
+        a{text-decoration:none;color:red;}
+        .back{margin-top:20px;}
+        .back a{color:#2563eb;font-weight:bold;}
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Admins List</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Admin ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin.id }}</td>
+            <td>{{ admin.admin_id }}</td>
+            <td>{{ admin.username if admin.username else "ID Login Only" }}</td>
+            <td>{{ admin.role }}</td>
+            <td>
+                {% if admin.role != "superadmin" %}
+                <a href="/delete_admin/{{ admin.id }}" onclick="return confirm('Delete this admin?')">Delete</a>
+                {% else %}
+                Main Admin
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="back">
+        <a href="/admin/dashboard">⬅ Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>
