@@ -123,7 +123,6 @@ def student_stats(student_id):
 def bot_reply_only_details(message):
     text = message.lower().strip()
 
-    # ---------- STUDENT SIDE ----------
     if student_logged_in():
         student = Student.query.get(session["student_id"])
         if not student:
@@ -163,7 +162,6 @@ Question: {message}
 
         return "AI key not set. I can only answer student details and attendance."
 
-    # ---------- ADMIN SIDE ----------
     if admin_logged_in():
         admin_id = session["admin_id"]
         total_students, total_attendance, total_present, total_absent = global_stats_for_current_admin()
@@ -273,7 +271,7 @@ def login():
 
 
 # =========================
-# NEW ADMIN LOGIN (ID ONLY)
+# NEW ADMIN LOGIN
 # =========================
 @app.route("/admin-id-login", methods=["GET", "POST"])
 def admin_id_login():
@@ -294,32 +292,25 @@ def admin_id_login():
 
 
 # =========================
-# STUDENT LOGIN
+# STUDENT LOGIN (ROLL ONLY)
 # =========================
-@app.route("/student/login", methods=["GET","POST"])
+@app.route("/student/login", methods=["GET", "POST"])
 def student_login():
-
     if request.method == "POST":
-
         roll_number = request.form.get("roll_number")
 
-        student = Student.query.filter_by(
-            roll_number=roll_number
-        ).first()
+        student = Student.query.filter_by(roll_number=roll_number).first()
 
         if student:
-
             session.clear()
             session["student_id"] = student.id
-
+            session["student_owner_admin_id"] = student.owner_admin_id
             return redirect("/student/dashboard")
 
-        return render_template(
-            "student_login.html",
-            error="Student not found"
-        )
+        return render_template("student_login.html", error="Student not found.")
 
     return render_template("student_login.html", error=None)
+
 
 # =========================
 # ADMIN DASHBOARD
@@ -541,6 +532,10 @@ def student_dashboard():
         return redirect("/student/login")
 
     student = Student.query.get(session["student_id"])
+    if not student:
+        session.clear()
+        return redirect("/student/login")
+
     attendance = Attendance.query.filter_by(student_id=student.id).all()
     total, present, absent, pct = student_stats(student.id)
 
