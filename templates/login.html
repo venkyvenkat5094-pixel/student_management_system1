@@ -1,26 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Selector</title>
+    <title>Login Assistant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <meta name="theme-color" content="#2563eb">
     <style>
-        body{margin:0;font-family:Arial;height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#0f172a,#2563eb);}
-        .box{width:380px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border-radius:18px;padding:28px;box-shadow:0 10px 25px rgba(0,0,0,0.25);color:white;}
-        h2{text-align:center;margin:0 0 10px 0;}
-        .subtitle{text-align:center;font-size:14px;opacity:0.9;margin-bottom:18px;}
-        .chat-area{background:#0b1428;border-radius:12px;padding:12px;min-height:120px;margin-bottom:16px;}
-        .bubble-ai{background:#1a233a;color:white;padding:10px 12px;border-radius:10px;margin-bottom:10px;display:inline-block;max-width:90%;}
-        .bubble-user{background:#2b60ff;color:white;padding:10px 12px;border-radius:10px;margin:8px 0 8px auto;display:block;width:fit-content;max-width:90%;}
-        .option-btn,.login-btn,.back-btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;font-size:15px;}
-        .option-btn,.back-btn{background:rgba(255,255,255,0.18);color:white;}
-        .option-btn:hover,.back-btn:hover{background:rgba(255,255,255,0.28);}
-        .login-btn{background:#111827;color:white;}
-        .login-btn:hover{background:#1f2937;}
-        input{width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;outline:none;box-sizing:border-box;}
-        .hidden{display:none;}
-        #installBtn{display:none;}
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#0f172a,#2563eb);
+            padding:20px;
+            box-sizing:border-box;
+        }
+        .box{
+            width:380px;
+            max-width:100%;
+            background:rgba(255,255,255,0.12);
+            backdrop-filter:blur(10px);
+            border-radius:18px;
+            padding:28px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.25);
+            color:white;
+        }
+        h2{
+            text-align:center;
+            margin:0 0 10px 0;
+        }
+        .subtitle{
+            text-align:center;
+            font-size:14px;
+            opacity:0.9;
+            margin-bottom:18px;
+        }
+        .chat-area{
+            background:#0b1428;
+            border-radius:12px;
+            padding:12px;
+            min-height:120px;
+            margin-bottom:16px;
+        }
+        .bubble-ai{
+            background:#1a233a;
+            color:white;
+            padding:10px 12px;
+            border-radius:10px;
+            margin-bottom:10px;
+            display:inline-block;
+            max-width:90%;
+        }
+        .bubble-user{
+            background:#2b60ff;
+            color:white;
+            padding:10px 12px;
+            border-radius:10px;
+            margin:8px 0 8px auto;
+            display:block;
+            width:fit-content;
+            max-width:90%;
+        }
+        .option-btn,
+        .login-btn,
+        .back-btn{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+            font-size:15px;
+        }
+        .option-btn,
+        .back-btn{
+            background:rgba(255,255,255,0.18);
+            color:white;
+        }
+        .option-btn:hover,
+        .back-btn:hover{
+            background:rgba(255,255,255,0.28);
+        }
+        .login-btn{
+            background:#111827;
+            color:white;
+        }
+        .login-btn:hover{
+            background:#1f2937;
+        }
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border:none;
+            border-radius:10px;
+            outline:none;
+            box-sizing:border-box;
+        }
+        .hidden{
+            display:none;
+        }
+        #installBtn{
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -63,14 +148,13 @@
 
     <div id="studentForm" class="hidden">
         <form method="POST" action="/student/login">
-            <input type="text" name="admin_id" placeholder="Enter Admin ID" required>
             <input type="text" name="roll_number" placeholder="Enter Roll Number" required>
             <button type="submit" class="login-btn">Student Login</button>
         </form>
     </div>
 
     <button id="installBtn" class="option-btn">Install App</button>
-    <button id="backBtn" class="back-btn hidden" onclick="goBack()">⬅ Back</button>
+    <button id="backBtn" class="back-btn hidden" onclick="goBack()">← Back</button>
 </div>
 
 <script>
@@ -118,7 +202,7 @@ function chooseRole(role){
 
     if(role === "student"){
         addUserBubble("I am Student");
-        addAiBubble("Okay. Please enter your Admin ID and Roll Number to login.");
+        addAiBubble("Okay. Please enter your Roll Number to login.");
         document.getElementById("studentForm").classList.remove("hidden");
     }
 }
