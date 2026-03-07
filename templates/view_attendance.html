@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Attendance</title>
+    <style>
+        body{font-family:Arial;background:#f4f6fb;padding:20px;}
+        .card{background:white;border-radius:10px;padding:20px;box-shadow:0 5px 20px rgba(0,0,0,0.12);}
+        table{width:100%;border-collapse:collapse;}
+        th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left;}
+        a{text-decoration:none;color:red;}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Attendance Records</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for r in records %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.student.name }} ({{ r.student.roll_number }})</td>
+                <td>{{ r.date }}</td>
+                <td>{{ r.status }}</td>
+                <td><a href="/delete_attendance/{{ r.id }}" onclick="return confirm('Delete this attendance record?')">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <a href="/admin/dashboard">⬅ Back</a>
+    </div>
+</body>
+</html>
