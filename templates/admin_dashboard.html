@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body{font-family:Arial;background:#f4f6fb;margin:0;padding:0;}
+        header{background:#0f172a;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
+        .container{display:flex;padding:20px;gap:20px;}
+        .left{width:65%;}
+        .right{width:35%;}
+        .card{background:white;border-radius:10px;padding:20px;box-shadow:0 5px 20px rgba(0,0,0,0.08);margin-bottom:20px;}
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
+        .links a{text-decoration:none;color:#2563eb;margin-right:15px;font-weight:bold;display:inline-block;margin-bottom:10px;}
+        .chatbox{background:#0b1428;color:white;height:450px;display:flex;flex-direction:column;border-radius:8px;padding:10px;}
+        #chatlog{flex:1;overflow-y:auto;}
+        .bubble{padding:8px;margin:6px;border-radius:6px;max-width:80%;}
+        .user{background:#2b60ff;align-self:flex-end;}
+        .ai{background:#1a233a;align-self:flex-start;}
+        .inputbox{display:flex;gap:5px;}
+        input{flex:1;padding:8px;border-radius:5px;border:none;}
+        button{padding:8px;border:none;background:#2b60ff;color:white;border-radius:5px;cursor:pointer;}
+    </style>
+</head>
+<body>
+<header>
+    <div>
+        <b>Admin Dashboard</b> |
+        {{ session["admin_username"] }} |
+        ID: {{ session["admin_custom_id"] }} |
+        Role: {{ session["admin_role"] }}
+    </div>
+    <div>
+        <a href="/logout" style="color:white;text-decoration:none;">Logout</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="left">
+        <div class="card">
+            <div class="stats">
+                <div class="card"><h4>Total Students</h4><h2>{{ total_students }}</h2></div>
+                <div class="card"><h4>Attendance Records</h4><h2>{{ total_attendance }}</h2></div>
+                <div class="card"><h4>Total Present</h4><h2>{{ total_present }}</h2></div>
+                <div class="card"><h4>Total Absent</h4><h2>{{ total_absent }}</h2></div>
+            </div>
+        </div>
+
+        <div class="card links">
+            <a href="/add_student">➕ Add Student</a>
+            <a href="/view_students">👀 View Students</a>
+            <a href="/add_attendance">📝 Mark Attendance</a>
+            <a href="/view_attendance">📄 View Attendance</a>
+
+            {% if session["admin_role"] == "superadmin" %}
+            <a href="/add_admin">➕ Add Admin</a>
+            <a href="/view_admins">👀 View Admins</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;">
+                <h3>🤖 AI Chatbot</h3>
+                <button onclick="newChat()">New Chat</button>
+            </div>
+
+            <div class="chatbox">
+                <div id="chatlog">
+                    {% if not chat_history %}
+                    <div class="bubble ai">Ask me about education, students, or attendance.</div>
+                    {% endif %}
+                    {% for chat in chat_history %}
+                    <div class="bubble user">{{ chat.user }}</div>
+                    <div class="bubble ai">{{ chat.bot }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="inputbox">
+                    <input id="msg" placeholder="Ask about education or student details...">
+                    <button onclick="sendMsg()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const chatlog=document.getElementById("chatlog")
+
+function addBubble(text,type){
+    let div=document.createElement("div")
+    div.className="bubble "+type
+    div.innerText=text
+    chatlog.appendChild(div)
+    chatlog.scrollTop=chatlog.scrollHeight
+}
+
+async function sendMsg(){
+    let msg=document.getElementById("msg").value
+    if(!msg) return
+
+    addBubble(msg,"user")
+    document.getElementById("msg").value=""
+
+    let res=await fetch("/chat_api",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({message:msg})
+    })
+
+    let data=await res.json()
+    addBubble(data.reply,"ai")
+}
+
+async function newChat(){
+    await fetch("/new_chat",{method:"POST"})
+    chatlog.innerHTML=""
+    addBubble("New chat started.", "ai")
+}
+</script>
+</body>
+</html>
