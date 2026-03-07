@@ -2,79 +2,106 @@
 <html>
 <head>
 <title>Student Login</title>
+
 <style>
+
 body{
-font-family: Arial;
-background:#f0f0f0;
+font-family:Arial;
+background:linear-gradient(120deg,#1e3c72,#2a5298);
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
 margin:0;
 }
 
-.box{
-background:white;
+.container{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
 padding:40px;
-border-radius:10px;
+border-radius:15px;
 width:350px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
 text-align:center;
+color:white;
+}
+
+.chatbox{
+background:#0b1a33;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+text-align:left;
 }
 
 input{
 width:100%;
-padding:10px;
+padding:12px;
 margin:10px 0;
-border-radius:5px;
-border:1px solid #ccc;
-box-sizing:border-box;
+border-radius:8px;
+border:none;
 }
 
 button{
 width:100%;
-padding:10px;
-background:#007bff;
-color:white;
+padding:12px;
 border:none;
-border-radius:5px;
+background:#0b1a33;
+color:white;
+border-radius:8px;
 cursor:pointer;
 }
 
 button:hover{
-background:#0056b3;
+background:#152d5c;
+}
+
+.back{
+margin-top:10px;
+background:#4b6cb7;
 }
 
 .error{
 color:red;
-margin-top:10px;
 }
 
-a{
-display:inline-block;
-margin-top:15px;
-text-decoration:none;
-color:#007bff;
-}
 </style>
+
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>Student Login</h2>
+<h2>Login Assistant</h2>
+<p>Student Management System</p>
+
+<div class="chatbox">
+<p>Hello 👋</p>
+<p>Please tell me who you are:</p>
+<p>1) Main Admin<br>
+2) New Admin<br>
+3) Student</p>
+
+<p style="text-align:right;color:#4fa3ff;">I am Student</p>
+
+<p>Okay. Please enter your Roll Number to login.</p>
+</div>
 
 <form method="POST">
-    <input type="text" name="roll_number" placeholder="Enter Roll Number" required>
-    <button type="submit">Login</button>
+
+<input type="text" name="roll_number" placeholder="Enter Roll Number" required>
+
+<button type="submit">Student Login</button>
+
 </form>
 
 {% if error %}
-<p class="error">{{ error }}</p>
+<p class="error">{{error}}</p>
 {% endif %}
 
-<a href="/">Back to Home</a>
+<a href="/">
+<button class="back">← Back</button>
+</a>
 
 </div>
 
