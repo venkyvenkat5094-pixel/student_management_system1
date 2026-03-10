@@ -2,9 +2,7 @@
 <html>
 <head>
     <title>View Students</title>
-
     <style>
-
         body{
             font-family: Arial, Helvetica, sans-serif;
             background:#f5f6fa;
@@ -61,48 +59,34 @@
             color:#e74c3c;
             font-weight:bold;
         }
-
     </style>
-
 </head>
-
 <body>
 
 <div class="container">
+    <h2>Students</h2>
 
-<h2>Students</h2>
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Roll Number</th>
+            <th>Action</th>
+        </tr>
 
-<table>
+        {% for student in students %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.roll_number }}</td>
+            <td>
+                <a class="delete" href="/delete_student/{{ student.id }}" onclick="return confirm('Delete this student?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<tr>
-<th>S.No</th>
-<th>Name</th>
-<th>Roll Number</th>
-<th>Action</th>
-</tr>
-
-{% for student in students %}
-
-<tr>
-
-<td>{{ loop.index }}</td>
-
-<td>{{ student.name }}</td>
-
-<td>{{ student.roll }}</td>
-
-<td>
-<a class="delete" href="/delete_student/{{ student.id }}">Delete</a>
-</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-<a class="back" href="/admin_dashboard">← Back</a>
-
+    <a class="back" href="/admin/dashboard">← Back</a>
 </div>
 
 </body>
